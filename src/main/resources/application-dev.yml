@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://zoodyservinglife:1234@cluster0.8pjuk.mongodb.net/SafeTap-SoS
+      auto-index-creation: true
+
+jwt:
+  secret: ZoodyServingLife01254584asdwa145sc45125
+
+logging:
+  level:
+    org.springframework.data.mongodb.core: DEBUG
+    org.springframework.web : DEBUG
+
+    org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor : TRACE
+
+
+
+debug : true
