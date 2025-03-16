@@ -35,7 +35,8 @@ public class SecurityConfig {
                                                 "/SafeTap-SoS/register",
                                                 "/swagger-ui/**",
                                                 "/v3/api-docs/**",
-                                                "/swagger-ui.html"
+                                                "/swagger-ui.html",
+                                                "SafeTap-SoS/emergency/nearby-Users/**"
                                         ).permitAll()
                                         .anyRequest().authenticated()
                 )

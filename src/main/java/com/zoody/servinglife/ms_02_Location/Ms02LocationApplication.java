@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,6 +31,11 @@ public class Ms02LocationApplication {
 		SpringApplication.run(Ms02LocationApplication.class, args);
 	}
 
+
+	@Bean
+	public MongoTemplate mongoTemplate(MongoDatabaseFactory mongoDbFactory) {
+		return new MongoTemplate(mongoDbFactory);
+	}
 
 	@Bean
 	public PasswordEncoder getPasswordEncoder(){

@@ -15,6 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Getter
 @Setter
@@ -28,8 +31,19 @@ public class User  {
     @Indexed(unique = true)
     private String username;
     private String password;
+    @NonNull
     private boolean locationSharingEnabled;
 
+    @NonNull
+    private Set<String> fcmToken =new HashSet<>(); // Store FCM Token
+
+    public Set<String> getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken.add(fcmToken);
+    }
 
     public String getId() {
         return id;

@@ -13,13 +13,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginContext;
 import java.io.DataInput;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/SafeTap-SoS")
@@ -28,6 +27,8 @@ public class LoginRequestController {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired private UserRepository userRepo;
+
+    @Autowired private PasswordEncoder encoder;
 
 
 
@@ -38,8 +39,11 @@ public class LoginRequestController {
 
         User user = userRepo.findByUsername(request.getUsername()).orElse(null);
 
-        if (user != null && request.getPassword().equals(user.getPassword()) ) {
+        if (user != null && encoder.matches(request.getPassword() , user.getPassword()) ) {
 
+
+            //Updating fmcToken
+            user.setFcmToken(request.getFcmToken());
             String token = jwtUtil.generateToken(user.getId());
             AuthResponse authResponse = new AuthResponse();
             authResponse.setToken(token);
@@ -47,5 +51,21 @@ public class LoginRequestController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
+
+
+    @PostMapping("/{userId}/updateFcmToken")
+    public ResponseEntity<String> updateFcmToken(@PathVariable String userId, @RequestParam String fcmToken) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isPresent()) {
+            User existingUser = user.get();
+            if (!existingUser.getFcmToken().contains(fcmToken)) {
+                existingUser.getFcmToken().add(fcmToken); // Add only if not already stored
+                userRepo.save(existingUser);
+            }
+            return ResponseEntity.ok("FCM Token Updated");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
 
 }

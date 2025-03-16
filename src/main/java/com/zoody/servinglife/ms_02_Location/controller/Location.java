@@ -21,8 +21,8 @@ public class Location {
 
 
     @GetMapping("fetchLocation/{username}")
-    public List<UserLocation> getUserLocations(@PathVariable String username) {
-        return userLocationRepository.findByUserId(username);//Locaion DAO is storing userName as userId
+    public UserLocation getUserLocations(@PathVariable String username) {
+        return userLocationRepository.findByUsername(username).orElseGet(null);//Locaion DAO is storing userName as userId
     }
 
 }
